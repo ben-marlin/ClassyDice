@@ -17,15 +17,15 @@ Java is an object-oriented language which makes extensive use of *class* structu
 
 For our purposes, we'll create a class which describes an object which we will think of a die. We'll use the word dice, even though the appropriate singular would be die. When you think of a die, it really only has two *properties* that are important. These are the number of `sides` it has and the current `value` that is face up. 
 
-When we're creating this class, you need to use your Explorer to navigate to the folder where `Main.java` resides. Click on the folder to make it active and right-click to make a `New File`. Name the new file `Dice.java`. This may take a couple of tries if you click through carelessly. The capital D is important and the .java is important.
+When we're creating this class, you need to use your Explorer to navigate to the folder where `Main.java` resides. Choose `File > New File > New Java File`. This will generate a file and prompt you to choose between several options - the first of which is what you want, `class`. The name will default to `Main`, so change it to `Dice` - the name of the class should always be the name of the file! Then save the file by hitting Control-S and providing the name `Dice.java` if prompted.
 
 Once you've got that, add `package edu.guilford;` at the top. This just binds our classes together - you'll see more on this in a later semester. Then add comments with your name & date as usual.
 
-Leave a blank line, then insert `public Dice {}` and return to get some blank space. Anything within those braces is in the class. We still need to do any imports outside the class definition.
+Notice the `public Dice {}` at the top. Anything within those braces is in the class. We will need to do any imports outside the class definition.
 
-As mentioned, we need to create two *properties* or *fields*, `sides` and `value`. Make both of them `public` and `int`. VSCode may complain about the `public`, but we'll fix it later.
+As mentioned, we need to create two *properties* or *fields*, `sides` and `value` just after the header for the class. Make both of them `public` and `int`. VSCode may complain about the `public`, but we'll fix it later.
 
-We're going to need one more thing, just for bookkeeping. You're going to need to randomize your dice throws, so you need a random object. I suggest naming it `rand` and instantiating it here. If VSCode didn't do it for you automatically, you'll have to `import java.util.Random;`.
+We're going to need one more thing, just for bookkeeping. You're going to need to randomize your dice throws, so you need a random object. I suggest naming it `rand` and instantiating it here. If VSCode doesn't do it for you automatically, you'll have to `import java.util.Random;` between the package line and the class header.
 
 Save it. Now you have a class. It doesn't actually do anything yet, and VSCode may have complained about that already.
 
@@ -46,7 +46,7 @@ That's probably a little confusing, right? Remember when we used something like 
 
 Because `sides` is the obvious thing to call the number of sides, it's probably what you want in the constructor, but since it's also what you called it as a field, there has to be a way to distinguish between the field and the value being passed. We use `this.sides` for the field.
 
-Save this - you can't run it, only save it.
+Save this - you can't run it, only save it. The `Main.java` class that is also in your project will play the role of a *driver* - code that is used to test the class you're constructing.
 
 ## Testing the Constructor
 
@@ -58,7 +58,7 @@ Dice d = new Dice(20,13);
 
 Now in the print statement, insert `+ d` after the literal string. When you run this code, it should give you an error of some sort when it gets to the print statement. That's because it doesn't know how to print `d`. But if you got to the print statement, then there wasn't a problem with the instantiation!
 
-To fix our error, try replacing `d` with `d.value`. This should make it print the 13, but this is TERRIBLE coding practice! I just wanted you to be able to print something.
+To fix our error, try replacing `d` with `d.value`. This should make it print the 13, but this is TERRIBLE coding practice! We don't want someone using our `Dice` class to be able to directly manipulate its fields. I just wanted you to be able to print something, and this is why we made the fields public. Make sure `d.value` prints before proceeding.
 
 ## Fixing the Privacy
 
@@ -68,7 +68,7 @@ Change both `sides` and `value` to `private`. Now, in order to deal with them, y
 
 Again, right click and open the `Source Action` menu again. Choose `Generate getters & setters` and choose that you want getters & setters for both `sides` and `value`. It should generate some very obvious methods.
 
-Returning to `main.java`, change the print statement to print `d.getValue()`. This should print the 13 again. Try changing to a different value in the instantiation step to make sure this works fine.
+Returning to `main.java`, change the print statement to print `d.getValue()`. This should print the 13 again. Try changing to a different value in the instantiation step to make sure it's not just a fluke.
 
 ## Better Printing
 
@@ -85,7 +85,7 @@ public String toString() {
 
 The `@Override` is simply an acknowledgement that you're writing your own version of `toString`. If you leave out `"" +`, you'll get an error because Java thinks you're trying to return an int as a string and it's not smart enough to figure out what you mean. Concatenating the int to an empty string fixes the error, though.
 
-Now, return to `Main.java` and print simply `d` instead if `d.getValue()`. It should work the way you expect.
+Now, return to `Main.java` and print simply `d` instead if `d.getValue()`. When you run `Main`, it should work the way you expect.
 
 ## Rolling
 
@@ -97,7 +97,7 @@ public void roll() {
 }
 ```
 
-Now, whenever you want to randomize `d`, you just issue `d.roll()`. Insert a line in `main` where you do this, then print it again. It should have randomized it and gotten a new value.
+Now, whenever you want to randomize `d`, you just issue `d.roll()`. Insert a line in `Main` where you do this, then a line to print it again. It should have randomized it and gotten a new value.
 
 ## Overloading the Constructor
 
@@ -127,7 +127,7 @@ Make sure to run `main` with examples using all 3 constructors so you're sure th
 
 ## The Simulation
 
-In `main`, we'll declare two variables.
+In `Main`, we'll declare two variables.
 
 ```
 int n = 10;
@@ -151,30 +151,16 @@ Next, we'll calculate the mean. To do this, create a `double` called `sum`, init
 double mean = sum / n;
 ```
 
-Next, we're going to calculate the standard deviation. To do this, we need a `double` named `sumSquares` initialized to 0. Then use a `for` loop and, in the body, include this.
-
-```
-sumSquares += (sim[i].getValue() - mean) * (sim[i].getValue() - mean);
-```
-
-Of course, if you used a different loop variable, make that adjustment. Incidentally, if you know this formula from stats, you may be curious why we aren't just squaring the value. Bizarrely enough, Java doesn't have an obvious way to do that. Worse, the way they do have is prone to round-off errors! Most people just multiply it.
-
-After the loop, assign this.
-
-```
-double stDev = sumSquares / (n-1);
-```
-
-And then make a print statement that prints the mean & standard deviation. You should get answers around 3.5 for the mean and 2.9 for the standard deviation. If your answers are *way* off, talk to me about it.
+And then make a print statement that prints the sample size & mean. You should get answers around 3.5 for the mean. If your answers are *way* off, talk to me about it.
 
 ## Increasing the Sample Size
 
-When you run a simulation, you never do it for $n=10$, but for huge numbers. We "always start small and build up to things", though. So now that it worked for $n=10$, put another zero on there and make $n=100$. Keep going until your machine complains about it. Mine ran out of memory at $n=100,000,000$... Can you imagine rolling a hundred million dice? Despite the newfound popularity of D&D, I'm not sure there are that many dice on earth...
+When you run a simulation, you never do it for $n=10$, but for huge numbers. We "always start small and build up to things", though. So now that it worked for $n=10$, copy the code and do it again, putting another zero on there to make $n=100$ before printing the result. Keep going until your machine complains about it. Mine ran out of memory at $n=100,000,000$... Can you imagine rolling a hundred million dice? Despite the newfound popularity of D&D, I doubt there are that many dice on Earth... In any case, comment out the section that made your computer complain.
 
 ## Bigger Dice
 
-Experiment with the notion of rolling dice with more sides: 8, 10, 12, etc. Insert another print statement to print what you think the trend is. When you increase the number of sides on the dice by 2, how much does the mean increase by? What about the standard deviation? These are guess-timates, it's OK to be inexact.
+Experiment with the notion of rolling dice with more sides: 8, 10, 12, etc. and $n=1000$ or so. Insert another print statement to print what you think the trend is. When you increase the number of sides on the dice by 2, how much does the mean increase by? These are guess-timates, it's OK to be inexact.
 
 ## Wrapping Up
 
-As usual, save everything. Commit. Send me a message on Canvas that you're done.
+As usual, save everything. Stage changes. Commit. Sync. Send me a message on Canvas that you're done.
